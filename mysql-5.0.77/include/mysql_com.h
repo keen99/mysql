@@ -159,8 +159,9 @@ enum enum_server_command
 #define SERVER_STATUS_NO_BACKSLASH_ESCAPES 512
 
 #define MYSQL_ERRMSG_SIZE	512
-#define NET_READ_TIMEOUT	30		/* Timeout on read */
-#define NET_WRITE_TIMEOUT	60		/* Timeout on write */
+//dsr 30 and 60
+#define NET_READ_TIMEOUT	79		/* Timeout on read */
+#define NET_WRITE_TIMEOUT	99		/* Timeout on write */
 #define NET_WAIT_TIMEOUT	8*60*60		/* Wait for new query */
 
 #define ONLY_KILL_QUERY         1

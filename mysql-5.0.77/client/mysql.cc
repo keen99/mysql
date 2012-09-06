@@ -155,7 +155,7 @@ static String processed_prompt;
 static char *full_username=0,*part_username=0,*default_prompt=0;
 static int wait_time = 5;
 static STATUS status;
-static ulong select_limit,max_join_size,opt_connect_timeout=0;
+static ulong select_limit,max_join_size,opt_connect_timeout=0,opt_read_timeout=30,opt_write_timeout=30;
 static char mysql_charsets_dir[FN_REFLEN+1];
 static const char *xmlmeta[] = {
   "&", "&amp;",
@@ -1459,6 +1459,16 @@ static struct my_option my_long_options[] =
    "Number of seconds before connection timeout.",
    (gptr*) &opt_connect_timeout,
    (gptr*) &opt_connect_timeout, 0, GET_ULONG, REQUIRED_ARG, 0, 0, 3600*12, 0,
+   0, 1},
+  {"read_timeout", OPT_READ_TIMEOUT,
+   "Number of seconds before socket read timeout.",
+   (gptr*) &opt_read_timeout,
+   (gptr*) &opt_read_timeout, 0, GET_ULONG, REQUIRED_ARG, 0, 0, 3600*12, 0,
+   0, 1},
+  {"write_timeout", OPT_WRITE_TIMEOUT,
+   "Number of seconds before socket write timeout.",
+   (gptr*) &opt_write_timeout,
+   (gptr*) &opt_write_timeout, 0, GET_ULONG, REQUIRED_ARG, 0, 0, 3600*12, 0,
    0, 1},
   {"max_allowed_packet", OPT_MAX_ALLOWED_PACKET,
    "Max packet length to send to, or receive from server",
@@ -4090,6 +4100,18 @@ sql_real_connect(char *host,char *database,char *user,char *password,
   {
     uint timeout=opt_connect_timeout;
     mysql_options(&mysql,MYSQL_OPT_CONNECT_TIMEOUT,
+		  (char*) &timeout);
+  }
+  if (opt_read_timeout)
+  {
+    uint timeout=opt_read_timeout;
+    mysql_options(&mysql,MYSQL_OPT_READ_TIMEOUT,
+		  (char*) &timeout);
+  }
+  if (opt_write_timeout)
+  {
+    uint timeout=opt_write_timeout;
+    mysql_options(&mysql,MYSQL_OPT_WRITE_TIMEOUT,
 		  (char*) &timeout);
   }
   if (opt_compress)
